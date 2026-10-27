@@ -1,0 +1,666 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | SkillShareConnect</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            margin: 0;
+            background: #f6f7f1;
+            font-family: Arial, sans-serif;
+            color: #30483a;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 7%;
+            background: white;
+            box-shadow: 0 3px 12px #0000000a;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        header h2 { margin: 0; color: #416b54; }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #416b54;
+            font-weight: bold;
+        }
+
+        button, a { font-family: inherit; }
+
+        button:focus-visible, a:focus-visible {
+            outline: 3px solid #91bba0;
+            outline-offset: 3px;
+        }
+
+        .welcome {
+            margin: 35px auto;
+            width: 84%;
+            padding: 35px;
+            box-sizing: border-box;
+            border-radius: 20px;
+            background: linear-gradient(120deg, #dcebe0, #eae3f5);
+        }
+
+        .welcome h1 { margin-top: 0; font-size: 32px; }
+        .welcome p { line-height: 1.7; }
+
+        .section {
+            width: 84%;
+            margin: 35px auto;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 22px;
+        }
+
+        .card, .request-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 18px #00000008;
+            overflow-wrap: anywhere;
+        }
+
+        .card h3, .request-card h3 { color: #416b54; }
+
+        .card p, .request-card p {
+            color: #68756c;
+            line-height: 1.6;
+        }
+
+        .card a, .primary-btn, .logout-btn {
+            display: inline-block;
+            padding: 11px 16px;
+            border-radius: 8px;
+            background: #416b54;
+            color: white;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .logout-btn { margin-left: 0; }
+
+        .profile-box {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            line-height: 1.9;
+            overflow-wrap: anywhere;
+        }
+
+        .request-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .tab-btn {
+            border: 1px solid #cbdacc;
+            background: white;
+            color: #416b54;
+            padding: 11px 16px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background: #416b54;
+            color: white;
+        }
+
+        .requests-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+        }
+
+        .request-card {
+            border: 1px solid #e4e9e1;
+        }
+
+        .request-card h3 { margin-top: 0; }
+
+        .status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #fff0ce;
+            color: #795b16;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .status.Accepted {
+            background: #dff3e5;
+            color: #25653c;
+        }
+
+        .status.Declined {
+            background: #ffe1e1;
+            color: #9d3030;
+        }
+
+        .status.Completed {
+            background: #e7e2f8;
+            color: #59458b;
+        }
+
+        .request-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .request-actions button {
+            padding: 10px 13px;
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .accept-btn {
+            background: #416b54;
+            color: white;
+        }
+
+        .decline-btn, .cancel-btn {
+            background: #f9e5e5;
+            color: #9d3030;
+        }
+
+        .complete-btn {
+            background: #e7e2f8;
+            color: #59458b;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .message {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            color: #68756c;
+            line-height: 1.6;
+            margin: 12px 0;
+        }
+
+        .hidden { display: none !important; }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #68756c;
+        }
+
+        @media (max-width: 600px) {
+            header { padding: 18px; }
+            .welcome, .section { width: 90%; }
+            .welcome { padding: 25px; }
+            .welcome h1 { font-size: 26px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>SkillShareConnect</h2>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="find-skills.html">Find Skills</a>
+        <a href="edit-profile.html">Edit Profile</a>
+        <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
+    </nav>
+</header>
+
+<section class="welcome">
+    <h1 id="welcomeName">Welcome to SkillShareConnect!</h1>
+    <p>
+        Your skills can make a difference. Connect with people,
+        share your knowledge, and discover opportunities to help
+        your community.
+    </p>
+</section>
+
+<section class="section">
+    <h2>Your Dashboard</h2>
+
+    <div class="cards">
+        <div class="card">
+            <h3>🎯 Find Skills</h3>
+            <p>Explore skills offered by other members and request to learn something new.</p>
+            <a href="find-skills.html">Explore Skills</a>
+        </div>
+
+        <div class="card">
+            <h3>🙌 Offer Your Skills</h3>
+            <p>Update your skills so other members can discover what you can teach.</p>
+            <a href="edit-profile.html">Update My Profile</a>
+        </div>
+
+        <div class="card">
+            <h3>👤 My Profile</h3>
+            <p>View your account information and skills.</p>
+            <a href="#myProfile">View Profile</a>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="myRequests">
+    <h2>🌱 Skill Learning Requests</h2>
+    <p>Manage your private requests to learn and share skills.</p>
+
+    <div class="request-tabs">
+        <button class="tab-btn active" id="receivedTab" type="button">
+            📩 Requests Received
+        </button>
+
+        <button class="tab-btn" id="sentTab" type="button">
+            📤 Requests Sent
+        </button>
+    </div>
+
+    <div id="requestsMessage" class="message" role="status" aria-live="polite">
+        Loading your requests...
+    </div>
+
+    <div id="receivedRequests" class="requests-list"></div>
+    <div id="sentRequests" class="requests-list hidden"></div>
+</section>
+
+<section class="section" id="myProfile">
+    <h2>My Profile</h2>
+
+    <div class="profile-box">
+        <div><strong>Name:</strong> <span id="profileName">Loading...</span></div>
+        <div><strong>Email:</strong> <span id="profileEmail">Loading...</span></div>
+        <div><strong>Role:</strong> <span id="profileRole">Loading...</span></div>
+        <div><strong>Skills:</strong> <span id="profileSkills">Loading...</span></div>
+        <p><a href="edit-profile.html">Edit your profile and skills</a></p>
+    </div>
+</section>
+
+<footer>
+    SkillShareConnect — Share Skills, Build Community.
+</footer>
+
+<script>
+(() => {
+    const token = sessionStorage.getItem("token");
+
+    if (!token) {
+        window.location.replace("login.html");
+        return;
+    }
+
+    const welcomeName = document.getElementById("welcomeName");
+    const profileName = document.getElementById("profileName");
+    const profileEmail = document.getElementById("profileEmail");
+    const profileRole = document.getElementById("profileRole");
+    const profileSkills = document.getElementById("profileSkills");
+
+    const requestsMessage = document.getElementById("requestsMessage");
+    const receivedRequests = document.getElementById("receivedRequests");
+    const sentRequests = document.getElementById("sentRequests");
+
+    const receivedTab = document.getElementById("receivedTab");
+    const sentTab = document.getElementById("sentTab");
+
+    let activeTab = "received";
+
+    function makeElement(tag, text, className = "") {
+        const element = document.createElement(tag);
+        element.textContent = text;
+
+        if (className) element.className = className;
+
+        return element;
+    }
+
+    function showMessage(text) {
+        requestsMessage.textContent = text;
+        requestsMessage.classList.remove("hidden");
+    }
+
+    function hideMessage() {
+        requestsMessage.classList.add("hidden");
+    }
+
+    async function apiRequest(url, options = {}) {
+        const response = await fetch(url, {
+            ...options,
+            headers: {
+                Authorization: "Bearer " + token,
+                ...(options.body ? { "Content-Type": "application/json" } : {}),
+                ...(options.headers || {})
+            }
+        });
+
+        let data;
+
+        try {
+            data = await response.json();
+        } catch {
+            data = {};
+        }
+
+        if (response.status === 401) {
+            sessionStorage.removeItem("token");
+            sessionStorage.removeItem("user");
+            window.location.replace("login.html");
+            throw new Error("Your session expired. Please log in again.");
+        }
+
+        if (!response.ok) {
+            throw new Error(data.message || "Something went wrong.");
+        }
+
+        return data;
+    }
+
+    async function loadProfile() {
+        try {
+            const data = await apiRequest("/api/me");
+            const user = data.user;
+
+            welcomeName.textContent =
+                "Welcome, " + (user.name || "Volunteer") + "!";
+
+            profileName.textContent = user.name || "Not provided";
+            profileEmail.textContent = user.email || "Not provided";
+            profileRole.textContent = user.role || "Not provided";
+
+            profileSkills.textContent =
+                user.skills && user.skills.length
+                    ? user.skills.join(", ")
+                    : "No skills added yet";
+
+            sessionStorage.setItem("user", JSON.stringify(user));
+        } catch (error) {
+            welcomeName.textContent = "Welcome to SkillShareConnect!";
+            profileName.textContent = "Unable to load";
+            profileEmail.textContent = "Unable to load";
+            profileRole.textContent = "Unable to load";
+            profileSkills.textContent = "Unable to load";
+
+            if (sessionStorage.getItem("token")) {
+                showMessage(error.message);
+            }
+        }
+    }
+
+    function setActiveTab(tab) {
+        activeTab = tab;
+
+        const showReceived = tab === "received";
+
+        receivedRequests.classList.toggle("hidden", !showReceived);
+        sentRequests.classList.toggle("hidden", showReceived);
+
+        receivedTab.classList.toggle("active", showReceived);
+        sentTab.classList.toggle("active", !showReceived);
+
+        receivedTab.setAttribute("aria-pressed", String(showReceived));
+        sentTab.setAttribute("aria-pressed", String(!showReceived));
+
+        hideMessage();
+    }
+
+    receivedTab.addEventListener("click", () => setActiveTab("received"));
+    sentTab.addEventListener("click", () => setActiveTab("sent"));
+
+    async function updateRequestStatus(id, status, button) {
+        button.disabled = true;
+
+        try {
+            await apiRequest(
+                "/api/skill-requests/" + encodeURIComponent(id) + "/status",
+                {
+                    method: "PATCH",
+                    body: JSON.stringify({ status })
+                }
+            );
+
+            await loadRequests();
+        } catch (error) {
+            showMessage(error.message);
+            button.disabled = false;
+        }
+    }
+
+    async function completeRequest(id, button) {
+        button.disabled = true;
+
+        try {
+            await apiRequest(
+                "/api/skill-requests/" + encodeURIComponent(id) + "/complete",
+                { method: "PATCH" }
+            );
+
+            await loadRequests();
+        } catch (error) {
+            showMessage(error.message);
+            button.disabled = false;
+        }
+    }
+
+    function renderReceived(items) {
+        receivedRequests.replaceChildren();
+
+        if (!items.length) {
+            receivedRequests.appendChild(
+                makeElement(
+                    "div",
+                    "No learning requests received yet. When someone wants to learn your skills, their request will appear here.",
+                    "message"
+                )
+            );
+            return;
+        }
+
+        items.forEach(item => {
+            const card = makeElement("article", "", "request-card");
+
+            card.appendChild(
+                makeElement(
+                    "h3",
+                    "🌱 " + (item.sender?.name || "A member") +
+                    " wants to learn " + item.skill
+                )
+            );
+
+            if (item.message) {
+                card.appendChild(makeElement("p", "Message: " + item.message));
+            }
+
+            const statusLine = makeElement("p", "Status: ");
+            statusLine.appendChild(
+                makeElement("span", item.status, "status " + item.status)
+            );
+            card.appendChild(statusLine);
+
+            card.appendChild(
+                makeElement(
+                    "p",
+                    "Received: " + (
+                        item.createdAt
+                            ? new Date(item.createdAt).toLocaleDateString()
+                            : "Date unavailable"
+                    )
+                )
+            );
+
+            if (item.status === "Pending") {
+                const actions = makeElement("div", "", "request-actions");
+
+                const accept = makeElement("button", "Accept", "accept-btn");
+                accept.type = "button";
+                accept.addEventListener("click", () =>
+                    updateRequestStatus(item.id, "Accepted", accept)
+                );
+
+                const decline = makeElement("button", "Decline", "decline-btn");
+                decline.type = "button";
+                decline.addEventListener("click", () =>
+                    updateRequestStatus(item.id, "Declined", decline)
+                );
+
+                actions.append(accept, decline);
+                card.appendChild(actions);
+            }
+
+            if (item.status === "Accepted") {
+                const complete = makeElement(
+                    "button",
+                    "Mark Completed",
+                    "complete-btn"
+                );
+                complete.type = "button";
+                complete.addEventListener("click", () =>
+                    completeRequest(item.id, complete)
+                );
+
+                const actions = makeElement("div", "", "request-actions");
+                actions.appendChild(complete);
+                card.appendChild(actions);
+            }
+
+            receivedRequests.appendChild(card);
+        });
+    }
+
+    function renderSent(items) {
+        sentRequests.replaceChildren();
+
+        if (!items.length) {
+            sentRequests.appendChild(
+                makeElement(
+                    "div",
+                    "You haven't sent any learning requests yet. Visit Find Skills to discover a skill.",
+                    "message"
+                )
+            );
+            return;
+        }
+
+        items.forEach(item => {
+            const card = makeElement("article", "", "request-card");
+
+            card.appendChild(
+                makeElement(
+                    "h3",
+                    "📚 " + item.skill
+                )
+            );
+
+            card.appendChild(
+                makeElement(
+                    "p",
+                    "Request sent to: " + (item.receiver?.name || "A member")
+                )
+            );
+
+            if (item.message) {
+                card.appendChild(makeElement("p", "Your message: " + item.message));
+            }
+
+            const statusLine = makeElement("p", "Status: ");
+            statusLine.appendChild(
+                makeElement("span", item.status, "status " + item.status)
+            );
+            card.appendChild(statusLine);
+
+            card.appendChild(
+                makeElement(
+                    "p",
+                    "Sent: " + (
+                        item.createdAt
+                            ? new Date(item.createdAt).toLocaleDateString()
+                            : "Date unavailable"
+                    )
+                )
+            );
+
+            if (item.status === "Accepted") {
+                const complete = makeElement(
+                    "button",
+                    "Mark Completed",
+                    "complete-btn"
+                );
+                complete.type = "button";
+                complete.addEventListener("click", () =>
+                    completeRequest(item.id, complete)
+                );
+
+                const actions = makeElement("div", "", "request-actions");
+                actions.appendChild(complete);
+                card.appendChild(actions);
+            }
+
+            sentRequests.appendChild(card);
+        });
+    }
+
+    async function loadRequests() {
+        receivedRequests.replaceChildren();
+        sentRequests.replaceChildren();
+        showMessage("Loading your learning requests...");
+
+        try {
+            const [receivedData, sentData] = await Promise.all([
+                apiRequest("/api/skill-requests/received"),
+                apiRequest("/api/skill-requests/sent")
+            ]);
+
+            renderReceived(receivedData.requests || []);
+            renderSent(sentData.requests || []);
+
+            hideMessage();
+            setActiveTab(activeTab);
+        } catch (error) {
+            receivedRequests.replaceChildren();
+            sentRequests.replaceChildren();
+            showMessage(error.message);
+        }
+    }
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("user");
+        window.location.replace("login.html");
+    });
+
+    loadProfile();
+    loadRequests();
+})();
+</script>
+
+</body>
+</html>

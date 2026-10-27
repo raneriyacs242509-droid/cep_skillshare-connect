@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | SkillShareConnect</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f6f7f1;
+            color: #30483a;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 7%;
+            background: white;
+        }
+
+        header h2 { color: #416b54; margin: 0; }
+
+        header a {
+            color: #416b54;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 35px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px #0000000a;
+            box-sizing: border-box;
+            width: 92%;
+        }
+
+        h1 { color: #416b54; }
+
+        .subtitle {
+            color: #68756c;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .field { margin-bottom: 20px; }
+
+        .field > label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .field input:not([type="checkbox"]),
+        .field select,
+        .field textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d8e1d9;
+            border-radius: 9px;
+            box-sizing: border-box;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        .skills {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .skills label {
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .skills input { width: auto; }
+
+        .custom-skill-box {
+            margin-top: 18px;
+            padding: 16px;
+            background: #f0f6ef;
+            border: 1px solid #d8e7d7;
+            border-radius: 12px;
+        }
+
+        .custom-skill-box label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .custom-skill-box small {
+            display: block;
+            margin-top: 8px;
+            color: #68756c;
+            line-height: 1.5;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #416b54;
+            color: white;
+            border: none;
+            border-radius: 9px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover { background: #31533f; }
+
+        #message { margin-top: 15px; }
+
+        @media (max-width: 480px) {
+            .container { padding: 22px; }
+            header { padding: 18px 5%; }
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <h2>SkillShareConnect</h2>
+    <a href="dashboard.html">← Dashboard</a>
+</header>
+
+<main class="container">
+    <h1>Edit Your Profile ✨</h1>
+    <p class="subtitle">
+        Tell the community about yourself and the skills you can share.
+    </p>
+
+    <form id="profileForm">
+        <div class="field">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" required>
+        </div>
+
+        <div class="field">
+            <label for="age">Age Group</label>
+            <select id="age">
+                <option value="">Select age group</option>
+                <option>Under 18</option>
+                <option>18-24</option>
+                <option>25-34</option>
+                <option>35-44</option>
+                <option>45-54</option>
+                <option>55+</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label for="role">What best describes you?</label>
+            <select id="role">
+                <option>Student</option>
+                <option>Working Professional</option>
+                <option>Self-employed</option>
+                <option>Homemaker</option>
+                <option>Community Volunteer</option>
+                <option>Retired</option>
+                <option>Other</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Skills You Can Share</label>
+
+            <div class="skills">
+                <label><input type="checkbox" name="skills" value="Teaching"> Teaching</label>
+                <label><input type="checkbox" name="skills" value="Technology"> Technology</label>
+                <label><input type="checkbox" name="skills" value="Computer Science"> Computer Science</label>
+                <label><input type="checkbox" name="skills" value="Art and Design"> Art and Design</label>
+                <label><input type="checkbox" name="skills" value="Sports and Fitness"> Sports and Fitness</label>
+                <label><input type="checkbox" name="skills" value="Cooking"> Cooking</label>
+                <label><input type="checkbox" name="skills" value="Communication"> Communication</label>
+                <label><input type="checkbox" name="skills" value="Repair Skills"> Repair Skills</label>
+                <label><input type="checkbox" name="skills" value="Community Support"> Community Support</label>
+                <label>
+                    <input type="checkbox" id="otherSkillCheckbox">
+                    Other skills
+                </label>
+            </div>
+
+            <div id="customSkillBox" class="custom-skill-box" hidden>
+                <label for="customSkills">Enter your other skills</label>
+                <textarea
+                    id="customSkills"
+                    rows="3"
+                    maxlength="1000"
+                    placeholder="Example: Python, Java, Photography, Video Editing"
+                ></textarea>
+                <small>
+                    Enter one or more skills, separated by commas.
+                    Your saved custom skills will appear here when you edit your profile.
+                </small>
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="bio">About Me</label>
+            <textarea
+                id="bio"
+                rows="4"
+                placeholder="Describe yourself and how you can help others..."
+            ></textarea>
+        </div>
+
+        <button type="submit">Save Profile</button>
+        <p id="message" role="status"></p>
+    </form>
+</main>
+
+<script>
+    const otherSkillCheckbox = document.getElementById("otherSkillCheckbox");
+    const customSkillBox = document.getElementById("customSkillBox");
+
+    otherSkillCheckbox.addEventListener("change", function () {
+        customSkillBox.hidden = !this.checked;
+    });
+</script>
+
+<script src="edit-profile.js"></script>
+</body>
+</html>

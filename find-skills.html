@@ -1,0 +1,1086 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Skills | SkillShareConnect</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: #29352f;
+      background:
+        radial-gradient(circle at 8% 8%, #e4f2e5, transparent 30%),
+        radial-gradient(circle at 92% 15%, #eee6fa, transparent 30%),
+        #f8faf7;
+    }
+
+    .page-shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: auto;
+      padding: 26px 0 50px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .brand {
+      color: #37634e;
+      font-size: 1.25rem;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      padding: 10px 13px;
+      text-decoration: none;
+      color: #46564b;
+      border-radius: 12px;
+      font-weight: bold;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: #e7f1e8;
+      color: #37634e;
+    }
+
+    .hero {
+      padding: 28px;
+      border-radius: 24px;
+      background: linear-gradient(120deg, #e6f3e6, #f0e9fa);
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      color: #37634e;
+      font-size: .78rem;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin: 12px 0;
+    }
+
+    .hero p {
+      line-height: 1.6;
+      color: #56665b;
+      margin: 0;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 22px 0 12px;
+    }
+
+    .toolbar input,
+    .toolbar select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #e0e7df;
+      border-radius: 12px;
+      background: white;
+      font-size: .95rem;
+    }
+
+    .search-box { flex: 1 1 260px; }
+    .toolbar select { flex: 0 1 220px; }
+
+    .results-label {
+      color: #68756e;
+      font-size: .9rem;
+      margin: 14px 2px;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .skill-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+      padding: 18px;
+      border: 1px solid #e4e9e4;
+      border-radius: 19px;
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 7px 22px rgba(43,67,53,.06);
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .skill-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(43,67,53,.11);
+    }
+
+    .skill-icon {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
+      background: #eaf4e9;
+      font-size: 1.6rem;
+    }
+
+    .skill-card:nth-child(3n+2) .skill-icon {
+      background: #f0eafa;
+    }
+
+    .skill-card:nth-child(3n) .skill-icon {
+      background: #fff1dd;
+    }
+
+    .skill-card h2 {
+      font-size: 1.03rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .skill-card p {
+      color: #68756e;
+      font-size: .88rem;
+      line-height: 1.5;
+      margin: 0;
+      flex: 1;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      padding: 5px 8px;
+      border-radius: 20px;
+      background: #f1f5f0;
+      color: #53665a;
+      font-size: .73rem;
+    }
+
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .card-actions button {
+      flex: 1 1 115px;
+      border: 0;
+      border-radius: 11px;
+      padding: 11px 9px;
+      font-size: .82rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .interest-btn {
+      background: #eee8f8;
+      color: #665188;
+    }
+
+    .interest-btn:hover { background: #dcd0f0; }
+
+    .request-btn {
+      background: #4f8068;
+      color: white;
+    }
+
+    .request-btn:hover { background: #37634e; }
+
+    button:disabled {
+      opacity: .65;
+      cursor: not-allowed;
+    }
+
+    .empty-state {
+      display: none;
+      padding: 30px;
+      text-align: center;
+      background: white;
+      border: 1px dashed #cdd8ce;
+      border-radius: 18px;
+      color: #68756e;
+    }
+
+    .status-message {
+      display: none;
+      padding: 12px 14px;
+      margin: 12px 0;
+      border-radius: 12px;
+      font-size: .92rem;
+      line-height: 1.45;
+    }
+
+    .status-message.success {
+      display: block;
+      color: #285b3c;
+      background: #e8f5e9;
+      border: 1px solid #cce7d0;
+    }
+
+    .status-message.error {
+      display: block;
+      color: #8b3333;
+      background: #fff0ef;
+      border: 1px solid #f1ceca;
+    }
+
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(26,36,29,.55);
+      padding: 18px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      width: min(510px, 100%);
+      max-height: 90vh;
+      overflow: auto;
+      background: white;
+      border-radius: 22px;
+      padding: 25px;
+      box-shadow: 0 25px 80px rgba(0,0,0,.2);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .modal h2 { margin: 0 0 8px; }
+
+    .modal p {
+      color: #68756e;
+      line-height: 1.5;
+    }
+
+    .close-modal {
+      border: 0;
+      border-radius: 10px;
+      background: #f0f2ef;
+      font-size: 1.2rem;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+    }
+
+    .form-field { margin: 15px 0; }
+
+    .form-field label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+      font-size: .9rem;
+    }
+
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      border: 1px solid #dce3dc;
+      border-radius: 12px;
+      padding: 12px;
+      font: inherit;
+    }
+
+    .form-field textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .modal-actions button {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .cancel-btn {
+      background: #f0f2ef;
+      color: #3d4b42;
+    }
+
+    .submit-btn {
+      background: #4f8068;
+      color: white;
+    }
+
+    .footer-note {
+      color: #68756e;
+      font-size: .83rem;
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    @media (max-width: 1000px) {
+      .skills-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    }
+
+    @media (max-width: 720px) {
+      .skills-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .topbar { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (max-width: 480px) {
+      .page-shell { width: calc(100% - 22px); }
+      .skills-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="index.html">🌱 SkillShareConnect</a>
+      <nav class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a class="active" href="find-skills.html">Find Skills</a>
+        <a href="edit-profile.html">My Profile</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">Learn together · Grow together</div>
+      <h1>Find a skill. Share a skill.</h1>
+      <p>Explore skills shared by our community. Save a skill to your interests, or send a learning request to a member who offers it.</p>
+    </section>
+
+    <div id="pageMessage" class="status-message" role="status"></div>
+
+    <section class="toolbar">
+      <div class="search-box">
+        <input id="skillSearch" type="search"
+          placeholder="Search skills, e.g. programming..."
+          aria-label="Search skills">
+      </div>
+
+      <select id="categoryFilter" aria-label="Filter skills">
+        <option value="all">All categories</option>
+        <option value="technology">Technology</option>
+        <option value="creative">Creative</option>
+        <option value="business">Business</option>
+        <option value="community">Community & lifestyle</option>
+      </select>
+    </section>
+
+    <div id="resultsLabel" class="results-label">Loading skills…</div>
+    <section id="skillsGrid" class="skills-grid"></section>
+    <div id="emptyState" class="empty-state">
+      No skills match your search. Try another word or category.
+    </div>
+
+    <p class="footer-note">
+      SkillShareConnect brings people together through learning, volunteering and sharing knowledge.
+    </p>
+  </main>
+
+  <div id="requestModal" class="modal-backdrop"
+       role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2 id="modalTitle">Request to learn</h2>
+          <p id="modalDescription">Choose a member who offers this skill.</p>
+        </div>
+        <button type="button" class="close-modal" id="closeModal"
+                aria-label="Close">×</button>
+      </div>
+
+      <form id="requestForm">
+        <div class="form-field">
+          <label for="memberSelect">Choose a member</label>
+          <select id="memberSelect" required>
+            <option value="">Select a member…</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="requestMessage">Message (optional)</label>
+          <textarea id="requestMessage" maxlength="500"
+            placeholder="Hi! I'd like to learn this skill. Could you guide me?"></textarea>
+        </div>
+
+        <div id="modalMessage" class="status-message" role="status"></div>
+
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="cancelModal">Cancel</button>
+          <button type="submit" class="submit-btn" id="sendRequestBtn">Send request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  
+<script>
+"use strict";
+
+const token =
+  sessionStorage.getItem("token") ||
+  localStorage.getItem("token");
+
+let currentUserId = "";
+let members = [];
+let selectedCardSkill = "";
+let selectedMemberSkill = "";
+let requestInProgress = false;
+
+const skills = [
+  { name: "Teaching / Tutoring", icon: "📚", category: "community",
+    description: "Share knowledge, school subjects and tutoring support.",
+    tags: ["Education", "Mentoring"] },
+
+  { name: "Computer Science / Programming", icon: "💻", category: "technology",
+    description: "Learn coding, programming logic and computer science.",
+    tags: ["Coding", "CS"] },
+
+  { name: "Web Development", icon: "🌐", category: "technology",
+    description: "Build websites using HTML, CSS and JavaScript.",
+    tags: ["HTML", "JavaScript"] },
+
+  { name: "App Development", icon: "📱", category: "technology",
+    description: "Explore mobile application development and testing.",
+    tags: ["Mobile", "Apps"] },
+
+  { name: "Data Science / Data Analysis", icon: "📊", category: "technology",
+    description: "Work with data, statistics, charts and basic ML.",
+    tags: ["Data", "Analytics"] },
+
+  { name: "Information Technology (IT)", icon: "🖥️", category: "technology",
+    description: "Learn computer support, networking and IT basics.",
+    tags: ["IT Support", "Networks"] },
+
+  { name: "Electronics & Telecommunication (EXTC)", icon: "🔌", category: "technology",
+    description: "Explore electronics, circuits and communication systems.",
+    tags: ["Electronics", "Hardware"] },
+
+  { name: "Art / Craft / Design", icon: "🎨", category: "creative",
+    description: "Exchange drawing, handmade craft and design ideas.",
+    tags: ["Art", "Craft"] },
+
+  { name: "Graphics & Canva", icon: "🪄", category: "creative",
+    description: "Create posters, presentations and social media graphics.",
+    tags: ["Canva", "Graphics"] },
+
+  { name: "Photography / Videography", icon: "📷", category: "creative",
+    description: "Improve photography, lighting and video creation.",
+    tags: ["Photo", "Video"] },
+
+  { name: "Content Writing", icon: "✍️", category: "creative",
+    description: "Practice writing articles, captions and blogs.",
+    tags: ["Writing", "Editing"] },
+
+  { name: "Digital Marketing / Social Media", icon: "📣", category: "business",
+    description: "Learn social media planning and online promotion.",
+    tags: ["Marketing", "Social"] },
+
+  { name: "Accounting / Finance", icon: "🧾", category: "business",
+    description: "Share budgeting, bookkeeping and finance basics.",
+    tags: ["Accounts", "Budgeting"] },
+
+  { name: "Event Management", icon: "🎉", category: "business",
+    description: "Learn event planning and team coordination.",
+    tags: ["Planning", "Coordination"] },
+
+  { name: "Sports / Fitness", icon: "🏃", category: "community",
+    description: "Share fitness routines and sports practice.",
+    tags: ["Fitness", "Sports"] },
+
+  { name: "Community Support", icon: "🤝", category: "community",
+    description: "Connect through volunteering and community initiatives.",
+    tags: ["Volunteering", "Support"] },
+
+  { name: "Communication Skills", icon: "🗣️", category: "community",
+    description: "Practice public speaking and confident communication.",
+    tags: ["Speaking", "Confidence"] },
+
+  { name: "Practical & Repair Skills", icon: "🛠️", category: "community",
+    description: "Exchange practical repair and hands-on skills.",
+    tags: ["Repair", "DIY"] }
+];
+
+const skillsGrid = document.getElementById("skillsGrid");
+const resultsLabel = document.getElementById("resultsLabel");
+const emptyState = document.getElementById("emptyState");
+const pageMessage = document.getElementById("pageMessage");
+const modal = document.getElementById("requestModal");
+const memberSelect = document.getElementById("memberSelect");
+const modalMessage = document.getElementById("modalMessage");
+const sendRequestBtn = document.getElementById("sendRequestBtn");
+
+function showMessage(element, message, type) {
+  element.textContent = message;
+  element.className = "status-message " + type;
+  element.style.display = "block";
+}
+
+function clearMessage(element) {
+  element.textContent = "";
+  element.className = "status-message";
+  element.style.display = "none";
+}
+
+function safeText(value) {
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[character]);
+}
+
+async function apiRequest(url, options = {}) {
+  const headers = { ...(options.headers || {}) };
+
+  if (token) {
+    headers.Authorization = "Bearer " + token;
+  }
+
+  if (options.body) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  const response = await fetch(url, {
+    ...options,
+    headers
+  });
+
+  let data = {};
+
+  try {
+    data = await response.json();
+  } catch (_) {
+    data = {};
+  }
+
+  if (response.status === 401) {
+    sessionStorage.removeItem("token");
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+    throw new Error("Please log in again.");
+  }
+
+  if (!response.ok || data.success === false) {
+    throw new Error(
+      data.message || "Something went wrong. Please try again."
+    );
+  }
+
+  return data;
+}
+
+/* Normalise skill names for matching */
+
+function normaliseSkill(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/extc/g, " electronics telecommunication ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+const skillAliases = [
+  ["computer science programming", "programming", "coding",
+   "computer science", "software development"],
+
+  ["web development", "web designing", "website development"],
+
+  ["app development", "mobile app development",
+   "android development", "application development"],
+
+  ["data science data analysis", "data science",
+   "data analysis", "analytics", "machine learning"],
+
+  ["information technology it", "information technology",
+   "it support", "computer hardware", "networking"],
+
+  ["electronics and telecommunication extc", "electronics",
+   "telecommunication", "electronics telecommunication",
+   "embedded systems"],
+
+  ["art craft design", "art", "craft", "design", "drawing"],
+
+  ["graphics and canva", "graphics", "graphic design",
+   "canva", "poster design"],
+
+  ["photography videography", "photography", "videography",
+   "video editing", "photo editing"],
+
+  ["content writing", "writing", "copywriting", "blog writing"],
+
+  ["digital marketing social media", "digital marketing",
+   "social media", "social media marketing"],
+
+  ["accounting finance", "accounting", "accounts",
+   "finance", "bookkeeping"],
+
+  ["event management", "event planning", "event coordination"],
+
+  ["sports fitness", "sports", "fitness", "exercise", "yoga"],
+
+  ["community support", "volunteering", "community service",
+   "social work"],
+
+  ["communication skills", "communication", "public speaking",
+   "presentation skills", "spoken english"],
+
+  ["practical repair skills", "repair", "technical skills",
+   "diy", "maintenance"],
+
+  ["teaching tutoring", "teaching", "tutoring",
+   "mentoring", "education"]
+];
+
+function skillsMatch(first, second) {
+  const a = normaliseSkill(first);
+  const b = normaliseSkill(second);
+
+  if (!a || !b) return false;
+  if (a === b || a.includes(b) || b.includes(a)) return true;
+
+  return skillAliases.some(group => {
+    const firstMatches = group.some(
+      item => normaliseSkill(item) === a
+    );
+
+    const secondMatches = group.some(
+      item => normaliseSkill(item) === b
+    );
+
+    return firstMatches && secondMatches;
+  });
+}
+
+/* Display skill cards */
+
+function renderSkills() {
+  const query =
+    document.getElementById("skillSearch").value.trim().toLowerCase();
+
+  const category =
+    document.getElementById("categoryFilter").value;
+
+  const filtered = skills.filter(skill => {
+    const searchableText =
+      [skill.name, skill.description, ...skill.tags]
+        .join(" ")
+        .toLowerCase();
+
+    const matchesSearch = searchableText.includes(query);
+    const matchesCategory =
+      category === "all" || skill.category === category;
+
+    return matchesSearch && matchesCategory;
+  });
+
+  skillsGrid.innerHTML = filtered.map(skill => `
+    <article class="skill-card">
+      <div class="skill-icon" aria-hidden="true">${skill.icon}</div>
+
+      <h2>${safeText(skill.name)}</h2>
+
+      <p>${safeText(skill.description)}</p>
+
+      <div class="tags">
+        ${skill.tags.map(tag =>
+          `<span class="tag">${safeText(tag)}</span>`
+        ).join("")}
+      </div>
+
+      <div class="card-actions">
+        <button
+          type="button"
+          class="interest-btn"
+          data-interest="${safeText(skill.name)}">
+          ♡ Save Interest
+        </button>
+
+        <button
+          type="button"
+          class="request-btn"
+          data-request="${safeText(skill.name)}">
+          Request to Learn
+        </button>
+      </div>
+    </article>
+  `).join("");
+
+  resultsLabel.textContent =
+    `${filtered.length} skill categories shown`;
+
+  emptyState.style.display = filtered.length ? "none" : "block";
+}
+
+/* Load the logged-in user's profile */
+
+async function loadCurrentUser() {
+  const data = await apiRequest("/api/me");
+
+  const user = data.user || data.profile || data;
+
+  currentUserId = String(
+    user._id || user.id || user.userId || ""
+  );
+}
+
+/* Load members from MongoDB */
+
+async function loadMembers() {
+  const data = await apiRequest("/api/people");
+
+  if (!Array.isArray(data.people)) {
+    throw new Error(
+      "The /api/people route must return a people array."
+    );
+  }
+
+  members = data.people.filter(person =>
+    person &&
+    person._id &&
+    String(person._id) !== currentUserId
+  );
+}
+
+/* Save an interest */
+
+async function saveInterest(skill, button) {
+  if (button.disabled) return;
+
+  const originalText = button.textContent;
+  button.disabled = true;
+  button.textContent = "Saving…";
+
+  try {
+    await apiRequest("/api/interests", {
+      method: "POST",
+      body: JSON.stringify({ skill })
+    });
+
+    button.textContent = "✓ Interest Saved";
+
+    showMessage(
+      pageMessage,
+      `Saved "${skill}" to your interests!`,
+      "success"
+    );
+
+  } catch (error) {
+    button.textContent = originalText;
+
+    showMessage(
+      pageMessage,
+      error.message,
+      "error"
+    );
+
+  } finally {
+    button.disabled = false;
+  }
+}
+
+/* Open the learning request modal */
+
+async function showRequest(skill) {
+  selectedCardSkill = skill;
+  selectedMemberSkill = "";
+
+  clearMessage(modalMessage);
+
+  document.getElementById("modalTitle").textContent =
+    "Request to learn";
+
+  document.getElementById("modalDescription").textContent =
+    `Choose a member who offers ${skill}.`;
+
+  document.getElementById("requestMessage").value = "";
+
+  memberSelect.innerHTML =
+    '<option value="">Loading members…</option>';
+
+  sendRequestBtn.disabled = true;
+
+  modal.classList.add("open");
+  document.body.style.overflow = "hidden";
+
+  try {
+    if (!currentUserId) {
+      await loadCurrentUser();
+    }
+
+    await loadMembers();
+
+    const matchingMembers = members.map(member => {
+      const personSkills = Array.isArray(member.skills)
+        ? member.skills
+        : [];
+
+      const actualSkill = personSkills.find(personSkill =>
+        skillsMatch(personSkill, selectedCardSkill)
+      );
+
+      if (!actualSkill) return null;
+
+      return {
+        ...member,
+        actualSkill
+      };
+    }).filter(Boolean);
+
+    if (matchingMembers.length === 0) {
+      memberSelect.innerHTML =
+        '<option value="">No matching members found</option>';
+
+      showMessage(
+        modalMessage,
+        "No member currently lists this skill. Try another skill or check back later.",
+        "error"
+      );
+
+      return;
+    }
+
+    memberSelect.innerHTML =
+      '<option value="">Select a member…</option>' +
+      matchingMembers.map(member => `
+        <option
+          value="${safeText(member._id)}"
+          data-skill="${safeText(member.actualSkill)}">
+          ${safeText(member.name || "Community member")}
+          — ${safeText(member.actualSkill)}
+        </option>
+      `).join("");
+
+    sendRequestBtn.disabled = false;
+
+  } catch (error) {
+    memberSelect.innerHTML =
+      '<option value="">Unable to load members</option>';
+
+    showMessage(modalMessage, error.message, "error");
+  }
+}
+
+/* Close the modal */
+
+function closeRequestModal() {
+  modal.classList.remove("open");
+  document.body.style.overflow = "";
+
+  clearMessage(modalMessage);
+
+  sendRequestBtn.disabled = false;
+  sendRequestBtn.textContent = "Send request";
+  requestInProgress = false;
+}
+
+/* Handle the two skill-card buttons */
+
+skillsGrid.addEventListener("click", event => {
+  const interestButton = event.target.closest("[data-interest]");
+  const requestButton = event.target.closest("[data-request]");
+
+  if (interestButton) {
+    saveInterest(
+      interestButton.dataset.interest,
+      interestButton
+    );
+  }
+
+  if (requestButton) {
+    showRequest(requestButton.dataset.request);
+  }
+});
+
+/* Update the selected member's actual profile skill */
+
+memberSelect.addEventListener("change", () => {
+  const option = memberSelect.options[memberSelect.selectedIndex];
+
+  selectedMemberSkill =
+    option && option.dataset
+      ? option.dataset.skill || ""
+      : "";
+});
+
+/* Send a learning request */
+
+document.getElementById("requestForm")
+  .addEventListener("submit", async event => {
+    event.preventDefault();
+
+    if (requestInProgress) return;
+
+    const receiverId = memberSelect.value;
+
+    const option =
+      memberSelect.options[memberSelect.selectedIndex];
+
+    selectedMemberSkill =
+      option && option.dataset
+        ? option.dataset.skill || ""
+        : "";
+
+    if (!receiverId) {
+      showMessage(
+        modalMessage,
+        "Please select a member first.",
+        "error"
+      );
+      return;
+    }
+
+    if (!selectedMemberSkill) {
+      showMessage(
+        modalMessage,
+        "Please select a member who offers this skill.",
+        "error"
+      );
+      return;
+    }
+
+    requestInProgress = true;
+    sendRequestBtn.disabled = true;
+    sendRequestBtn.textContent = "Sending…";
+
+    try {
+      await apiRequest("/api/skill-requests", {
+        method: "POST",
+        body: JSON.stringify({
+          receiverId,
+          skill: selectedMemberSkill,
+          message: document.getElementById("requestMessage")
+            .value.trim()
+        })
+      });
+
+      showMessage(
+        modalMessage,
+        `Your request to learn "${selectedMemberSkill}" has been sent!`,
+        "success"
+      );
+
+      document.getElementById("requestMessage").value = "";
+
+      setTimeout(closeRequestModal, 1400);
+
+    } catch (error) {
+      showMessage(
+        modalMessage,
+        error.message,
+        "error"
+      );
+
+    } finally {
+      requestInProgress = false;
+      sendRequestBtn.disabled = false;
+      sendRequestBtn.textContent = "Send request";
+    }
+  });
+
+/* Search and category filters */
+
+document.getElementById("skillSearch")
+  .addEventListener("input", renderSkills);
+
+document.getElementById("categoryFilter")
+  .addEventListener("change", renderSkills);
+
+/* Modal close controls */
+
+document.getElementById("closeModal")
+  .addEventListener("click", closeRequestModal);
+
+document.getElementById("cancelModal")
+  .addEventListener("click", closeRequestModal);
+
+modal.addEventListener("click", event => {
+  if (event.target === modal) {
+    closeRequestModal();
+  }
+});
+
+document.addEventListener("keydown", event => {
+  if (
+    event.key === "Escape" &&
+    modal.classList.contains("open")
+  ) {
+    closeRequestModal();
+  }
+});
+
+/* Start the page */
+
+async function initialisePage() {
+  renderSkills();
+
+  if (!token) {
+    showMessage(
+      pageMessage,
+      "Please log in to save interests or request to learn a skill.",
+      "error"
+    );
+
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1200);
+
+    return;
+  }
+
+  try {
+    await loadCurrentUser();
+  } catch (error) {
+    showMessage(pageMessage, error.message, "error");
+  }
+}
+
+initialisePage();
+</script>
+
+</body>
+</html>
